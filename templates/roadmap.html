@@ -5,22 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lộ Trình Học Python</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-
+<header><i class="fas fa-road"></i> Lộ Trình Học Python</header>
 <nav>
     <a href="/">Login</a>
     <a href="/tracker">Tiến Trình</a>
     <a href="/roadmap">Lộ Trình</a>
     <a href="/logout">Đăng Xuất</a>
 </nav>
+<button class="dark-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
 
-<button class="toggle-dark" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
-<header style="text-align:center; font-size:2rem; margin:20px 0;">Lộ Trình Học Python</header>
-
-<div class="tab-container">
+<div class="tab-container" style="text-align:center; margin:20px;">
     <button class="tab active" onclick="showTab('basic')">Cơ Bản</button>
     <button class="tab" onclick="showTab('intermediate')">Trung Cấp</button>
     <button class="tab" onclick="showTab('advanced')">Nâng Cao</button>
@@ -42,11 +40,11 @@
     <div class="content" id="intermediate">
         <h2>Python Trung Cấp</h2>
         <ul>
-            <li>OOP: class, object, kế thừa</li>
+            <li>OOP: class, object, kế thừa, đa hình</li>
             <li>Xử lý file nâng cao & JSON</li>
             <li>Lambda, map, filter, reduce</li>
             <li>Xử lý ngoại lệ với try/except</li>
-            <li>Regex</li>
+            <li>Regex (biểu thức chính quy)</li>
             <li>Thư viện: os, sys, datetime</li>
         </ul>
     </div>
@@ -54,38 +52,53 @@
     <div class="content" id="advanced">
         <h2>Python Nâng Cao</h2>
         <ul>
-            <li>Lập trình bất đồng bộ: asyncio</li>
+            <li>Bất đồng bộ (async/await)</li>
             <li>Đa luồng, đa tiến trình</li>
-            <li>Django/Flask nâng cao</li>
-            <li>Pandas, NumPy</li>
-            <li>Machine Learning cơ bản</li>
+            <li>Tối ưu hiệu suất</li>
+            <li>Tích hợp API, Flask/Django</li>
         </ul>
     </div>
 
-    <button class="download-btn" onclick="downloadPDF()">Tải PDF Lộ Trình</button>
+    <button class="btn" onclick="exportPDF()">Tải PDF</button>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 function toggleDarkMode() {
     document.body.classList.toggle('dark');
+    const icon = document.querySelector('.dark-toggle i');
+    if (document.body.classList.contains('dark')) {
+        localStorage.setItem('theme', 'dark');
+        icon.className = 'fas fa-sun';
+    } else {
+        localStorage.setItem('theme', 'light');
+        icon.className = 'fas fa-moon';
+    }
 }
 
-function showTab(tabId) {
+window.onload = function() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.dark-toggle i').className = 'fas fa-sun';
+    }
+}
+
+function showTab(id) {
     document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
     event.target.classList.add('active');
 }
 
-function downloadPDF() {
+function exportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("LỘ TRÌNH HỌC PYTHON", 70, 15);
-    doc.save("LoTrinhHocPython.pdf");
+    doc.text("Lộ Trình Học Python", 10, 10);
+    const text = document.querySelector('.container').innerText;
+    doc.text(text, 10, 20);
+    doc.save("roadmap.pdf");
 }
 </script>
-
 </body>
-      </html>
-  
+</html>
