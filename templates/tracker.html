@@ -3,53 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Theo Dõi Tiến Trình</title>
+<title>Tiến Trình Học Python</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
+<header><i class="fas fa-tasks"></i> Theo Dõi Tiến Trình</header>
 <nav>
     <a href="/">Login</a>
     <a href="/tracker">Tiến Trình</a>
     <a href="/roadmap">Lộ Trình</a>
     <a href="/logout">Đăng Xuất</a>
 </nav>
-
-<button class="toggle-dark" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+<button class="dark-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
 
 <div class="container">
-    <h2>Tiến Trình Học Python</h2>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p style="color: green; text-align: center;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <div class="progress-bar">
-        <div class="progress" style="width: {{ percent }}%">{{ percent }}%</div>
+    <h2>Hoàn thành {{ percent }}%</h2>
+    <div class="progress-container">
+        <div class="progress" style="width: {{ percent }}%;">{{ percent }}%</div>
     </div>
-
-    <form method="POST" action="/tracker">
-        <ul>
-            {% for topic in roadmap %}
-                <li>
-                    <input type="checkbox" name="tasks" value="{{ topic }}" {% if topic in completed %}checked{% endif %}>
-                    {{ topic }}
-                </li>
-            {% endfor %}
-        </ul>
-        <button type="submit">Lưu Tiến Trình</button>
-    </form>
+    <ul>
+        {% for item in roadmap %}
+        <li>
+            <input type="checkbox" value="{{ item }}" {% if item in completed %}checked{% endif %} onchange="saveProgress()">
+            {{ item }}
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 
+<div id="loading"></div>
+<div class="toast" id="toast"></div>
+
 <script>
+function showToast(msg, color='#00b894') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.background = color;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
 function toggleDarkMode() {
     document.body.classList.toggle('dark');
+    const icon = document.querySelector('.dark-toggle i');
+    if (document.body.classList.contains('dark')) {
+        localStorage.setItem('theme', 'dark');
+        icon.className = 'fas fa-sun';
+    } else {
+        localStorage.setItem('theme', 'light');
+        icon.className = 'fas fa-moon';
+    }
+}
+
+window.onload = function() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.dark-toggle i').className = 'fas fa-sun';
+    }
+}
+
+async function saveProgress() {
+    const checked = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+    document.getElementById('loading').style.display = 'block';
+
+    try {
+        const res = await fetch('/update_progress', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({completed: checked})
+        });
+        const data = await res.json();
+        showToast(data.message);
+    } catch {
+        showToast("Không thể lưu, sẽ thử lại...", "orange");
+    }
+    document.getElementById('loading').style.display = 'none';
 }
 </script>
-
 </body>
 </html>
