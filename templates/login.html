@@ -5,46 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Đăng Nhập</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
+<header><i class="fas fa-user-circle"></i> Đăng Nhập / Đăng Ký</header>
 <nav>
     <a href="/">Login</a>
     <a href="/tracker">Tiến Trình</a>
     <a href="/roadmap">Lộ Trình</a>
 </nav>
-
-<button class="toggle-dark" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+<button class="dark-toggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
 
 <div class="container">
-    <h2>Đăng Nhập</h2>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p style="color: red; text-align: center;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <h2>Đăng nhập</h2>
     <form method="POST" action="/">
-        <input type="text" name="username" placeholder="Tên đăng nhập" required>
+        <input type="text" name="username" placeholder="Tên tài khoản" required>
         <input type="password" name="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng Nhập</button>
+        <button type="submit"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
     </form>
 
-    <div class="signup">
-        <form method="POST" action="/signup">
-            <input type="text" name="username" placeholder="Tạo tài khoản mới" required>
-            <input type="password" name="password" placeholder="Mật khẩu" required>
-            <button type="submit">Đăng Ký</button>
-        </form>
-    </div>
+    <h3>Đăng ký nhanh</h3>
+    <form method="POST" action="/signup">
+        <input type="text" name="username" placeholder="Tên tài khoản" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <button type="submit"><i class="fas fa-user-plus"></i> Đăng Ký</button>
+    </form>
 </div>
 
+<div id="loading"></div>
+<div class="toast" id="toast"></div>
+
 <script>
+function showToast(msg, color='#00b894') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.background = color;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
 function toggleDarkMode() {
     document.body.classList.toggle('dark');
+    const icon = document.querySelector('.dark-toggle i');
+    if (document.body.classList.contains('dark')) {
+        localStorage.setItem('theme', 'dark');
+        icon.className = 'fas fa-sun';
+    } else {
+        localStorage.setItem('theme', 'light');
+        icon.className = 'fas fa-moon';
+    }
+}
+
+window.onload = function() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.dark-toggle i').className = 'fas fa-sun';
+    }
 }
 </script>
-
 </body>
 </html>
