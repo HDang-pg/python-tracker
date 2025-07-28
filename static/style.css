@@ -1,169 +1,175 @@
-/* RESET */
-body {
-    font-family: Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
     margin: 0;
     padding: 0;
-    transition: background 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
     background: #f0f2f5;
+    color: #2d3436;
+    transition: background 0.3s, color 0.3s;
 }
 
-/* Dark mode */
-body.dark {
+.dark {
     background: #1e272e;
-    color: white;
+    color: #f1f1f1;
 }
 
-/* NAVBAR - Sticky */
+header {
+    background: linear-gradient(90deg, #0984e3, #6c5ce7);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Navbar */
 nav {
     background: #0984e3;
-    padding: 12px;
+    padding: 10px;
     text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 nav a {
     color: white;
     text-decoration: none;
     margin: 0 15px;
     font-weight: bold;
+    font-size: 1.1rem;
+    transition: color 0.3s, transform 0.3s;
+}
+nav a:hover {
+    color: #ffeaa7;
+    transform: scale(1.1);
 }
 
-/* Dark mode navbar */
-body.dark nav {
+/* Container */
+.container {
+    width: 95%;
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: background 0.3s;
+}
+.dark .container {
     background: #2d3436;
 }
 
-.toggle-dark {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    padding: 8px 12px;
-    background: #00b894;
+/* Buttons */
+button, .btn {
+    background: linear-gradient(90deg, #0984e3, #6c5ce7);
     color: white;
     border: none;
-    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
 }
-.toggle-dark:hover {
-    background: #55efc4;
-}
-
-/* CONTAINER */
-.container {
-    max-width: 700px;
-    margin: 60px auto 40px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: background 0.3s;
-}
-body.dark .container {
-    background: #2f3640;
-}
-
-/* TITLES */
-h2 {
-    text-align: center;
-    color: #0984e3;
-    margin-bottom: 15px;
-}
-body.dark h2 {
-    color: #74b9ff;
-}
-
-/* BUTTONS */
-button {
-    margin-top: 10px;
-    width: 100%;
-    padding: 12px;
-    background: #0984e3;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-}
 button:hover {
-    background: #74b9ff;
     transform: scale(1.05);
+    background: linear-gradient(90deg, #74b9ff, #a29bfe);
 }
 
-/* INPUT */
+/* Inputs */
 input {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    margin-bottom: 15px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    transition: background 0.3s, color 0.3s;
-}
-body.dark input {
-    background: #353b48;
-    color: white;
-    border: 1px solid #555;
+    font-size: 1rem;
 }
 
-/* PROGRESS BAR */
-.progress-bar {
-    height: 25px;
-    background: #dfe6e9;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 15px 0;
-}
-.progress {
-    height: 100%;
-    background: linear-gradient(90deg, #00b894, #00cec9);
-    text-align: center;
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #00b894;
     color: white;
-    font-weight: bold;
-    line-height: 25px;
-    transition: width 0.5s ease-in-out;
-}
-
-/* TABS (roadmap) */
-.tab-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-.tab {
-    padding: 12px 25px;
-    margin: 8px;
-    border: none;
-    background: #dfe6e9;
-    cursor: pointer;
-    font-size: 1.1rem;
+    padding: 14px 22px;
     border-radius: 8px;
-    transition: 0.3s;
     font-weight: bold;
-}
-.tab.active {
-    background: #0984e3;
-    color: white;
-    transform: scale(1.05);
-}
-body.dark .tab {
-    background: #636e72;
-    color: white;
-}
-
-/* Tab content animation */
-.content {
-    display: none;
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(20px);
+    transition: opacity 0.4s, transform 0.4s;
+    z-index: 9999;
 }
-.content.active {
-    display: block;
+.toast.show {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Loading Spinner */
+#loading {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #0984e3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1000;
+}
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Progress bar */
+.progress-container {
+    width: 100%;
+    background: #dfe6e9;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+.progress {
+    background: #0984e3;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Checkbox animation */
+input[type="checkbox"] {
+    transform: scale(1.3);
+    margin-right: 10px;
+    accent-color: #0984e3;
+    transition: transform 0.2s;
+}
+input[type="checkbox"]:checked {
+    transform: scale(1.5);
+}
+/* Dark Mode Toggle */
+.dark-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #0984e3;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 1000;
+}
+.dark-toggle:hover {
+    background: #74b9ff;
+    }
+    
