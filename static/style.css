@@ -13,11 +13,15 @@ body.dark {
     color: white;
 }
 
-/* NAVBAR */
+/* NAVBAR - Sticky */
 nav {
     background: #0984e3;
     padding: 12px;
     text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 nav a {
     color: white;
@@ -30,6 +34,7 @@ nav a {
 body.dark nav {
     background: #2d3436;
 }
+
 .toggle-dark {
     position: fixed;
     top: 15px;
@@ -50,7 +55,7 @@ body.dark nav {
 /* CONTAINER */
 .container {
     max-width: 700px;
-    margin: 40px auto;
+    margin: 60px auto 40px;
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -148,4 +153,17 @@ body.dark input {
 body.dark .tab {
     background: #636e72;
     color: white;
+}
+
+/* Tab content animation */
+.content {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.content.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
