@@ -77,6 +77,11 @@ def tracker():
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
+@app.route('/roadmap')
+def roadmap():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('roadmap.html')
+    
 if __name__ == '__main__':
     app.run(debug=True)
