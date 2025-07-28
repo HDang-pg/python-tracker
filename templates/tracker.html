@@ -8,6 +8,13 @@
 <body class="bg-light">
     <div class="container mt-5">
         <div class="card shadow p-4">
+            <nav style="background:#0984e3; padding:10px; text-align:center;">
+    <a href="/" style="color:white; text-decoration:none; margin:0 15px;">Login</a>
+    <a href="/tracker" style="color:white; text-decoration:none; margin:0 15px;">Tiến Trình</a>
+    <a href="/roadmap" style="color:white; text-decoration:none; margin:0 15px;">Lộ Trình</a>
+    <a href="/logout" style="color:white; text-decoration:none; margin:0 15px;">Đăng Xuất</a>
+            </nav>
+            
             <h1 class="text-center mb-4">Tiến trình học Python</h1>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
