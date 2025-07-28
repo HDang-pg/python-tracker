@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -43,7 +43,7 @@ def signup():
     flash("Đăng ký thành công, hãy đăng nhập!", "success")
     return redirect(url_for('login'))
 
-@app.route('/tracker', methods=['GET', 'POST'])
+@app.route('/tracker', methods=['GET'])
 def tracker():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -63,25 +63,28 @@ def tracker():
     ]
 
     completed = set(user.progress.split(',')) if user.progress else set()
-
-    if request.method == 'POST':
-        completed = set(request.form.getlist('tasks'))
-        user.progress = ','.join(completed)
-        db.session.commit()
-        flash("Tiến trình đã được lưu!", "success")
-
     percent = round((len(completed) / len(roadmap)) * 100)
     return render_template('tracker.html', roadmap=roadmap, completed=completed, percent=percent)
+
+@app.route('/update_progress', methods=['POST'])
+def update_progress():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Chưa đăng nhập'})
+
+    user = User.query.get(session['user_id'])
+    data = request.get_json()
+    user.progress = ','.join(data.get('completed', []))
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': 'Tiến trình đã lưu'})
+
+@app.route('/roadmap')
+def roadmap():
+    return render_template('roadmap.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
-@app.route('/roadmap')
-def roadmap():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    return render_template('roadmap.html')
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
